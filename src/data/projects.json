@@ -1,0 +1,98 @@
+{
+  "projects": [
+    {
+      "no": "no.01",
+      "title": "chess",
+      "meta": "2025 · javascript · game",
+      "description": "A chess game in the browser — full rules, legal-move highlighting, and an interface that <strong>stays out of the way</strong> of the board.",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/Chess"
+        },
+        {
+          "text": "demo ↗",
+          "href": "https://aryansjc.github.io/Chess/"
+        }
+      ],
+      "note": "checkmate, eventually"
+    },
+    {
+      "no": "no.02",
+      "title": "burgers",
+      "meta": "2025 · css, javascript · 1★",
+      "description": "A burger joint website — loud, greasy, and proud of it. HTML and CSS with a little spread of <strong>javascript on top</strong>.",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/Burgers"
+        },
+        {
+          "text": "demo ↗",
+          "href": "https://aryansjc.github.io/Burgers/"
+        }
+      ],
+      "note": "my most-starred child"
+    },
+    {
+      "no": "no.03",
+      "title": "control-you-device-with-your-hands",
+      "meta": "2026 · python · gesture control",
+      "description": "Control your device with your hands — camera-tracked gestures mapped to system actions. <strong>No touching required.</strong>",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/control-you-device-with-your-hands"
+        }
+      ],
+      "note": "minority report arc"
+    },
+    {
+      "no": "no.04",
+      "title": "fixer-ysws",
+      "meta": "2025 · css, python",
+      "description": "A fixer tool with a web face — python brains, CSS looks. Built to <strong>repair things fast</strong> and look decent doing it.",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/fixer-ysws"
+        },
+        {
+          "text": "demo ↗",
+          "href": "https://aryansjc.github.io/fixer-ysws/"
+        }
+      ],
+      "note": "have you tried turning it off"
+    },
+    {
+      "no": "no.05",
+      "title": "forest-journal",
+      "meta": "2025 · javascript · journaling",
+      "description": "A quiet little journaling app — write the day down, keep it somewhere green. <strong>Thoughts, but make it forest.</strong>",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/forest-journal"
+        },
+        {
+          "text": "demo ↗",
+          "href": "https://aryansjc.github.io/forest-journal/"
+        }
+      ],
+      "note": "touch grass, then log it"
+    },
+    {
+      "no": "no.06",
+      "title": "ideas",
+      "meta": "2025 · javascript · scratchpad",
+      "description": "A place for half-formed thoughts — every idea gets a page before it <strong>evaporates by morning</strong>.",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/ideas"
+        }
+      ],
+      "note": "the vault of almosts"
+    }
+  ]
+}

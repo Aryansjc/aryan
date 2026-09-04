@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => import.meta.env.PROD ? data.draft !== true : true);
+  const tags = [...new Set(posts.flatMap(p => p.data.tags))];
+  return tags.map(tag => ({ params: { tag }, props: { tag } }));
+}
+type Props = { tag: string };
+const { tag } = Astro.props;
+const posts = (await getCollection('blog', ({ data }) => {
+  if (import.meta.env.PROD && data.draft) return false;
+  return data.tags.includes(tag);
+})).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const base = import.meta.env.BASE_URL;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="color-scheme" content="dark" />
+<title>#{tag} — aryan singh</title>
+<link rel="icon" href={`${base}favicon.ico`} sizes="48x48" />
+<link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Martian+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style is:global>
+:root{--bg:#000;--ink:#e6edf5;--mut:#93a1b3;--acc:#4da3ff;--line:rgba(190,215,240,.15);--disp:'Bricolage Grotesque',sans-serif;--body:'Newsreader',serif;--mono:'Martian Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:var(--ink);font-family:var(--body);min-height:100vh}
+a{color:inherit}.u{text-decoration:underline;text-decoration-color:rgba(190,215,240,.35);text-underline-offset:4px}.u:hover{color:var(--acc);text-decoration-style:wavy}
+.top{position:sticky;top:0;display:flex;gap:1.2em;padding:.9em clamp(16px,3vw,36px);background:var(--bg);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10.5px}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 80px}
+h1{font-family:var(--disp);font-size:2rem;margin:.4em 0}.tag{color:var(--acc)}
+.count{font-family:var(--mono);font-size:10px;color:var(--mut);margin-bottom:1em}
+.rule{border:none;border-top:1px dashed var(--line);margin:1.2em 0}
+article{margin-bottom:2rem}.meta{font-family:var(--mono);font-size:10px;color:var(--mut)}.meta time{color:var(--acc)}
+h2{font-family:var(--disp);font-size:1.25rem;margin:.3em 0}h2 a{text-decoration:none}h2 a:hover{color:var(--acc)}
+.desc{color:var(--mut);line-height:1.6}
+</style>
+</head>
+<body>
+<header class="top"><a class="u" href={base}>← home</a><a class="u" href={`${base}#blogs`}>blogs</a></header>
+<main class="wrap">
+<h1>~/blogs/<span class="tag">#{tag}</span></h1>
+<p class="count">{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
+<hr class="rule" />
+{posts.map((post) => (
+<article><div class="meta"><time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toLowerCase()}</time> · {post.data.type}</div>
+<h2><a href={`${base}blog/${post.id}/`}>{post.data.title}</a></h2>
+<p class="desc">{post.data.description}</p></article>
+))}
+<a class="u" style="font-family:var(--mono);font-size:10.5px" href={`${base}#blogs`}>← all entries</a>
+</main>
+</body>
+</html>

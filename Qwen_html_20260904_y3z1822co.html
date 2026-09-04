@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<title>aryan singh — a developer's notebook</title>
+<!-- ════════════════════════════════════════════════════════════
+     AMOLED · BLUE INK · one file · no frameworks · no templates
+     rooms: home / projects / about / journal / contact — no scroll.
+     keys: ← → or 1–5. BLOG: edit the POSTS array in <script>.
+     theme: tweak --acc / --pen in :root to taste.
+     ════════════════════════════════════════════════════════════ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Martian+Mono:wght@400;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#000000; --ink:#e6edf5; --mut:#93a1b3; --acc:#4da3ff; --pen:#9cc2ff;
+  --line:rgba(190,215,240,.15);
+  --disp:'Bricolage Grotesque',sans-serif; --body:'Newsreader',serif;
+  --mono:'Martian Mono',monospace; --hand:'Caveat',cursive;
+  --top:54px; --bot:44px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#000}
+body{color:var(--ink);font-family:var(--body);font-size:16px}
+::selection{background:var(--acc);color:#000}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:1.5px dashed var(--acc);outline-offset:3px}
+.mono{font-family:var(--mono)}
+body::after{content:"";position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.05;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── ambient: faint cool grid + blue cursor glow ───────────── */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    linear-gradient(rgba(120,160,210,.05) 1px,transparent 1px) 0 0/100% 56px,
+    linear-gradient(90deg,rgba(120,160,210,.05) 1px,transparent 1px) 0 0/56px 100%}
+.glow{position:fixed;z-index:1;width:540px;height:540px;left:0;top:0;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(77,163,255,.09),transparent 65%);will-change:transform}
+
+/* links: quiet underline, blue squiggle on hover */
+.u{text-decoration:underline;text-decoration-color:rgba(190,215,240,.35);text-underline-offset:4px;transition:color .15s,text-decoration-color .15s}
+.u:hover{color:var(--acc);text-decoration-color:var(--acc);text-decoration-style:wavy}
+
+/* ── top bar ────────────────────────────────────────────────── */
+.top{position:fixed;inset:0 0 auto 0;min-height:var(--top);z-index:40;display:flex;align-items:center;gap:1.2em;flex-wrap:wrap;
+  padding:.9em clamp(16px,3vw,36px);background:var(--bg);border-bottom:1px solid var(--line)}
+.tabsline{display:flex;align-items:baseline;gap:.85em;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px}
+.sl{color:var(--mut);opacity:.55}
+.tablink{font-family:var(--mono);font-size:10.5px;color:var(--ink);padding:0;
+  text-decoration:underline;text-decoration-color:rgba(190,215,240,.3);text-underline-offset:4px;transition:.15s}
+.tablink:hover{color:var(--acc);text-decoration-color:var(--acc);text-decoration-style:wavy}
+.tablink.here{color:var(--acc);text-decoration-color:var(--acc)}
+.topmeta{margin-left:auto;font-family:var(--mono);font-size:9.5px;color:var(--mut)}
+@media (max-width:640px){.topmeta{display:none}}
+
+/* ── bottom bar ────────────────────────────────────────────── */
+.status{position:fixed;inset:auto 0 0 0;min-height:var(--bot);z-index:40;display:flex;align-items:center;gap:2em;flex-wrap:wrap;
+  padding:.8em clamp(16px,3vw,36px);background:var(--bg);border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:9.5px;color:var(--mut)}
+.status .r{margin-left:auto;display:flex;gap:2em}
+
+/* ── stage, rooms, wipe (black panel, glowing blue edge) ───── */
+.stage{position:fixed;inset:var(--top) 0 var(--bot) 0;z-index:10}
+.wipe{position:fixed;inset:0;z-index:60;pointer-events:none;background:#000;transform:translateX(-102%)}
+.wipe i{position:absolute;top:0;bottom:0;right:-2px;width:2px;background:var(--acc);box-shadow:0 0 16px rgba(77,163,255,.65)}
+.wipe.run{animation:sweep .68s cubic-bezier(.75,0,.2,1)}
+@keyframes sweep{0%{transform:translateX(-102%)}46%{transform:translateX(0)}54%{transform:translateX(0)}100%{transform:translateX(102%)}}
+.page{position:absolute;inset:0;display:none;overflow:auto;scrollbar-width:none;
+  padding:clamp(22px,4.5vh,48px) clamp(18px,4.5vw,72px)}
+.page::-webkit-scrollbar{display:none}
+.page.on{display:block}
+.page [data-r]{opacity:0}
+.page.on [data-r]{animation:drop .45s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(90ms + var(--i,0)*55ms)}
+@keyframes drop{from{opacity:0;transform:translateY(10px) rotate(-.4deg)}to{opacity:1;transform:none}}
+
+.kicker{font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.08em;margin-bottom:1.2em}
+.kicker b{color:var(--acc);font-weight:700}
+h1.disp,h2.disp{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:.98;text-transform:lowercase}
+.pen{font-family:var(--hand);color:var(--pen);font-size:1.25em;line-height:1.2}
+.pen.red{color:var(--acc)}
+s{text-decoration-color:var(--acc);text-decoration-thickness:2px}
+
+/* ── HOME ──────────────────────────────────────────────────── */
+.homegrid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(1.5rem,4vw,4rem);height:100%}
+.hname{font-size:clamp(2.8rem,min(9vw,12vh),6.8rem);margin:.05em 0 .3em}
+.hname .ast{display:inline-block;color:var(--acc);animation:spin 9s linear infinite;font-family:var(--body)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hintro{font-size:clamp(.98rem,1.9vh,1.12rem);line-height:1.7;max-width:34em;color:var(--ink)}
+.hintro em{color:var(--mut)}
+.hfoot{margin-top:2.2em;font-family:var(--mono);font-size:9.5px;color:var(--mut)}
+.hfoot b{color:var(--acc);font-weight:400}
+.hright{align-self:center;justify-self:end;text-align:right;margin-right:calc(-1 * clamp(0px,1.5vw,24px))}
+.hright .pen{display:block;transform:rotate(-2deg);margin-bottom:.7em}
+.paths{display:flex;flex-direction:column;align-items:flex-end;gap:.15em}
+.path{display:inline-flex;align-items:baseline;gap:.8em;font-family:var(--mono);font-size:clamp(.85rem,2vh,1.02rem);
+  color:var(--acc);text-decoration:none;padding:.55em 0;transition:transform .2s}
+.path:hover{transform:translateX(-8px)}
+.path:hover span{text-decoration:underline;text-decoration-style:wavy}
+.path .arr{color:var(--mut);transition:.2s}
+.path:hover .arr{color:var(--acc)}
+@media (max-width:860px){.homegrid{grid-template-columns:1fr}
+  .hright{align-self:start;justify-self:end;margin-top:1.5em}}
+
+/* ── PROJECTS ──────────────────────────────────────────────── */
+.wlist{margin-top:2.5vh}
+.work{padding:1.6em 0;border-top:1px dashed var(--line);max-width:56em}
+.work:nth-child(even){margin-left:clamp(0px,6vw,90px)}
+.work:nth-child(3){margin-left:clamp(0px,3vw,44px)}
+.wtop{display:flex;align-items:baseline;gap:1.1em;flex-wrap:wrap}
+.wno{font-family:var(--mono);font-size:10px;color:var(--mut)}
+.work h3{font-family:var(--disp);font-weight:800;font-size:clamp(1.3rem,3.2vh,2rem);letter-spacing:-.01em}
+.wmeta{font-family:var(--mono);font-size:9.5px;color:var(--mut)}
+.wdesc{margin:.5em 0 .6em;font-size:.98rem;line-height:1.65;color:var(--mut);max-width:46em}
+.wdesc strong{color:var(--ink);font-weight:500}
+.wbot{display:flex;align-items:baseline;gap:1.4em;flex-wrap:wrap;font-family:var(--mono);font-size:10px}
+.wbot a{color:var(--ink)}
+.wnote{font-family:var(--hand);font-size:1.15em;color:var(--pen);transform:rotate(-1.5deg)}
+
+/* ── ABOUT ─────────────────────────────────────────────────── */
+.agrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(2rem,5vw,5rem);margin-top:2.5vh}
+.abio p{font-size:clamp(.95rem,1.9vh,1.06rem);line-height:1.75;color:var(--mut);max-width:40em}
+.abio p+p{margin-top:1em}
+.abio strong{color:var(--ink);font-weight:500}
+.figcap{font-family:var(--mono);font-size:9px;color:var(--mut);margin-top:.6em}
+.doodle{width:120px;margin-top:2em;opacity:.9}
+.doodle *{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.doodle .r{stroke:var(--acc)}
+.receipt{font-family:var(--mono);font-size:10.5px;color:var(--mut);max-width:34em;
+  border-top:2px dashed var(--line);border-bottom:2px dashed var(--line);padding:1.2em .4em}
+.receipt h4{color:var(--ink);font-weight:700;font-size:10.5px;letter-spacing:.06em;margin-bottom:1em}
+.rrow{display:flex;align-items:baseline;gap:.8em;padding:.34em 0}
+.rrow .dots{flex:1;border-bottom:2px dotted rgba(190,215,240,.22);transform:translateY(-3px)}
+.rrow b{color:var(--ink);font-weight:400}
+.receipt .note{font-family:var(--hand);font-size:1.15em;color:var(--pen);margin-top:.9em;transform:rotate(-1deg)}
+.langbar{display:flex;height:7px;overflow:hidden;background:#0d1117;margin:1.4em 0 .8em;max-width:34em}
+.langbar i{display:block;height:100%;width:0}
+.page.on .langbar i{animation:seg .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.3s + var(--i,0)*.06s)}
+@keyframes seg{to{width:var(--w)}}
+.langline{font-family:var(--mono);font-size:9.5px;color:var(--mut);line-height:2.1;max-width:36em}
+.langline b{font-weight:400}
+.skills{margin-top:1.8em;font-size:clamp(.92rem,1.8vh,1rem);line-height:1.9;color:var(--mut);max-width:40em}
+.skills b{color:var(--ink);font-weight:500}
+@media (max-width:860px){.agrid{grid-template-columns:1fr}}
+
+/* ── JOURNAL ───────────────────────────────────────────────── */
+.jgrid{display:grid;grid-template-columns:minmax(230px,340px) minmax(0,1fr);gap:clamp(1.5rem,4vw,4rem);margin-top:2.5vh;height:calc(100% - 9vh)}
+.jlist{border-right:1px dashed var(--line);overflow-y:auto;padding-right:1em;min-height:0;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.jlist::-webkit-scrollbar{width:3px}.jlist::-webkit-scrollbar-thumb{background:var(--line)}
+.jitem{display:block;width:100%;text-align:left;padding:.8em .8em;transition:background .15s}
+.jitem:hover{background:rgba(190,215,240,.05)}
+.jitem .jd{font-family:var(--mono);font-size:9px;color:var(--mut);letter-spacing:.06em}
+.jitem .jt{display:block;font-size:.95rem;line-height:1.4;margin-top:.3em;color:var(--mut)}
+.jitem.on .jt{color:var(--ink)}
+.jitem.on .jd{color:var(--acc)}
+.jitem.on .jt::before{content:"→ ";color:var(--acc)}
+.jbadge{font-family:var(--mono);font-size:8px;color:var(--mut);border:1px solid var(--line);padding:.15em .5em;margin-left:.6em}
+.jread{overflow-y:auto;min-height:0;padding-right:1em;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.jread::-webkit-scrollbar{width:3px}.jread::-webkit-scrollbar-thumb{background:var(--line)}
+.jread.swap .jr-in{animation:drop .4s cubic-bezier(.2,.7,.2,1) both}
+.jr-meta{font-family:var(--mono);font-size:9.5px;color:var(--mut);display:flex;gap:1.6em}
+.jr-meta .bb{color:var(--acc)}
+.jr-title{font-family:var(--disp);font-weight:800;font-size:clamp(1.3rem,3.4vh,2rem);line-height:1.1;margin:.45em 0 .6em;max-width:22em;letter-spacing:-.01em}
+.jr-body p{font-size:.98rem;line-height:1.75;color:var(--mut);max-width:52em}
+.jr-body p+p{margin-top:1em}
+.jr-body strong{color:var(--ink);font-weight:500}
+.jr-tags{margin-top:1.5em;font-family:var(--mono);font-size:9.5px;color:var(--mut)}
+.jr-tags i{font-style:normal;color:var(--acc)}
+@media (max-width:760px){.jgrid{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .jlist{max-height:32%;border-right:0;border-bottom:1px dashed var(--line);padding-right:0;padding-bottom:.5em}}
+
+/* ── CONTACT ───────────────────────────────────────────────── */
+.cdisp{font-size:clamp(2.6rem,min(8vw,10vh),5.6rem);margin:.1em 0 .35em;position:relative;display:inline-block}
+.cdisp::after{content:"";position:absolute;left:0;right:-.2em;bottom:-.12em;height:8px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 4 C 4 1, 8 5, 12 3 S 20 4, 24 2' fill='none' stroke='%234da3ff' stroke-width='1.4'/%3E%3C/svg%3E") repeat-x;background-size:24px 6px}
+.cmail{display:block;font-family:var(--body);font-style:italic;font-size:clamp(1.2rem,3.4vh,1.8rem);
+  color:var(--ink);text-decoration:underline;text-decoration-color:rgba(190,215,240,.35);text-underline-offset:6px;width:fit-content;margin:.4em 0 .3em;transition:.15s}
+.cmail:hover{color:var(--acc);text-decoration-color:var(--acc);text-decoration-style:wavy}
+.copy{font-family:var(--mono);font-size:9.5px;color:var(--mut);transition:.15s}
+.copy:hover{color:var(--acc)}
+.copy.ok{color:var(--acc)}
+.celse{margin-top:2.2em;font-family:var(--mono);font-size:10.5px;color:var(--mut);line-height:2.4}
+.cnote{margin-top:2.2em;font-size:clamp(.95rem,1.8vh,1.05rem);font-style:italic;color:var(--mut);max-width:36em}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  .wipe{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+<div class="wipe" id="wipe" aria-hidden="true"><i></i></div>
+
+<header class="top">
+  <nav class="tabsline" aria-label="pages">
+    <button class="tablink" data-page="0">home</button><span class="sl">/</span>
+    <button class="tablink" data-page="1">projects</button><span class="sl">/</span>
+    <button class="tablink" data-page="2">about</button><span class="sl">/</span>
+    <button class="tablink" data-page="3">journal</button><span class="sl">/</span>
+    <button class="tablink" data-page="4">contact</button><span class="sl">/</span>
+    <a class="tablink" href="https://github.com/Aryansjc" target="_blank" rel="noopener">github ↗</a> <!-- EDIT -->
+  </nav>
+  <span class="topmeta">last touched 29.07.26</span>
+</header>
+
+<main class="stage">
+
+  <!-- ══ home ══ -->
+  <section class="page home on" data-name="home">
+    <div class="homegrid">
+      <div>
+        <p class="kicker" data-r style="--i:0"><b>portfolio</b> · est. 2016 · still compiling</p>
+        <h1 class="disp hname" data-r style="--i:1">aryan singh<span class="ast">✳</span></h1>
+        <!-- EDIT: your intro -->
+        <p class="hintro" data-r style="--i:2">Hi — I'm Aryan. I build <s>perfect</s> clean, intentional systems: web apps, small games, creative tools, and — recently, stubbornly — <em>neural nets from scratch.</em> I like terminals, tight feedback loops, and code that reads like prose.</p>
+        <p class="hfoot" data-r style="--i:4">* this whole site is <b>one html file</b>. no frameworks, no templates. view source — i dare you.</p>
+      </div>
+      <nav class="hright" data-r style="--i:3" aria-label="quick paths">
+        <span class="pen">the good stuff ↓</span>
+        <div class="paths">
+          <button class="path" data-goto="1"><span>~/projects</span><span class="arr">→</span></button>
+          <button class="path" data-goto="2"><span>~/about</span><span class="arr">→</span></button>
+          <button class="path" data-goto="3"><span>~/journal</span><span class="arr">→</span></button>
+          <a class="path" href="https://github.com/Aryansjc" target="_blank" rel="noopener"><span>~/github</span><span class="arr">↗</span></a> <!-- EDIT -->
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ══ projects ══ -->
+  <section class="page" data-name="projects">
+    <p class="kicker" data-r style="--i:0"><b>~/projects</b> · five things i actually shipped</p>
+    <h2 class="disp" style="font-size:clamp(1.9rem,5vh,3rem)" data-r style="--i:1">things i've made<span style="color:var(--acc)">*</span></h2>
+    <p class="pen" data-r style="--i:2" style="display:block;margin:.4em 0 0">*shipping since 2016, crying since 2017</p>
+    <div class="wlist">
+      <!-- EDIT: your projects -->
+      <article class="work" data-r style="--i:3">
+        <div class="wtop"><span class="wno">no.01</span><h3>lattice</h3><span class="wmeta">2025 · typescript, react · role: everything</span></div>
+        <p class="wdesc">A headless component system and the dashboard eating it — typed tokens, accessible primitives, a layout engine that reflows <strong>without jank</strong>. Ships as a library and a live app.</p>
+        <p class="wbot"><a class="u" href="#">code ↗</a><a class="u" href="#">write-up</a><span class="wnote">my favourite child</span></p>
+      </article>
+      <article class="work" data-r style="--i:4">
+        <div class="wtop"><span class="wno">no.02</span><h3>orbit</h3><span class="wmeta">2025 · webgl, glsl · 60fps or riot</span></div>
+        <p class="wdesc">A 3D physics playground. Drag bodies, watch them collide, bend gravity with a slider. Fixed-timestep sim, interpolated draws — <strong>thirty fps on a phone</strong>, zero excuses.</p>
+        <p class="wbot"><a class="u" href="#">code ↗</a><a class="u" href="#">demo ↗</a><span class="wnote">the one that broke me</span></p>
+      </article>
+      <article class="work" data-r style="--i:5">
+        <div class="wtop"><span class="wno">no.03</span><h3>plotter</h3><span class="wmeta">2024 · canvas, node graph</span></div>
+        <p class="wdesc">A node-based generative-art editor. Wire operators, scrub parameters, export SVG. The whole graph is <strong>one undo stack</strong> and an unreasonable number of bézier curves.</p>
+        <p class="wbot"><a class="u" href="#">code ↗</a><span class="wnote">40kb of spite</span></p>
+      </article>
+      <article class="work" data-r style="--i:6">
+        <div class="wtop"><span class="wno">no.04</span><h3>vsh</h3><span class="wmeta">2024 · c++, posix · 80 columns</span></div>
+        <p class="wdesc">A terminal UI built to learn the hard parts — raw mode, escape sequences, a tiny parser. A file navigator that <strong>feels like a game</strong> and fits in a tty.</p>
+        <p class="wbot"><a class="u" href="#">code ↗</a><span class="wnote">still smells of solder</span></p>
+      </article>
+      <article class="work" data-r style="--i:7">
+        <div class="wtop"><span class="wno">no.05</span><h3>cortex</h3><span class="wmeta">2026 · python, numpy · no frameworks</span></div>
+        <p class="wdesc">A neural net from scratch — NumPy and stubbornness. Trains on digits, dreams in gradients. <strong>The loss curve finally points down.</strong></p>
+        <p class="wbot"><a class="u" href="#">code ↗</a><a class="u" href="#">notes</a><span class="wnote">send help (and data)</span></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══ about ══ -->
+  <section class="page" data-name="about">
+    <p class="kicker" data-r style="--i:0"><b>~/about</b> · the human behind the commits</p>
+    <h2 class="disp" style="font-size:clamp(1.9rem,5vh,3rem)" data-r style="--i:1">about, roughly</h2>
+    <div class="agrid">
+      <div class="abio" data-r style="--i:2">
+        <!-- EDIT: your bio -->
+        <p>Web engineering and system-style interfaces by day; <strong>creative tools, 2D/3D games and terminal experiments</strong> by night. I practice terminal-based languages the way musicians practice scales — badly, then suddenly well.</p>
+        <p>Right now I'm teaching myself <strong>machine learning</strong> the honest way: building nets from scratch so the magic stays magic but stops being mysterious. Somewhat skilled, fully obsessed.</p>
+        <p>I believe good code reads like prose, constraints breed creativity, and a good UI feels like a held door.</p>
+        <svg class="doodle" viewBox="0 0 120 120" aria-label="doodle self-portrait">
+          <circle cx="60" cy="42" r="21"/>
+          <path d="M42 34 q4 -12 18 -12 q14 0 18 12"/>
+          <circle cx="52" cy="44" r="6.5"/><circle cx="70" cy="44" r="6.5"/><path d="M58.5 44 h5"/>
+          <path d="M54 55 q6 4 12 0"/>
+          <path d="M38 96 q2 -22 22 -22 q20 0 22 22"/>
+          <rect x="44" y="82" width="34" height="16" rx="2"/>
+          <path class="r" d="M50 88 h10 M50 93 h16"/>
+        </svg>
+        <p class="figcap">fig.1 — the developer, probably. glasses accurate, hair optimistic.</p>
+      </div>
+      <div data-r style="--i:3">
+        <!-- EDIT: your real numbers -->
+        <div class="receipt">
+          <h4>THE GITHUB RECEIPT · as of 29.07.26</h4>
+          <div class="rrow"><span>stars</span><span class="dots"></span><b>84</b></div>
+          <div class="rrow"><span>forks</span><span class="dots"></span><b>23</b></div>
+          <div class="rrow"><span>all-time contributions</span><span class="dots"></span><b>1,204</b></div>
+          <div class="rrow"><span>lines of code changed</span><span class="dots"></span><b>412,938</b></div>
+          <div class="rrow"><span>repos touched</span><span class="dots"></span><b>14</b></div>
+          <div class="rrow"><span>regrets</span><span class="dots"></span><b>0.00</b></div>
+          <p class="note">i count stars like pokemon. don't tell anyone.</p>
+        </div>
+        <!-- EDIT: your language mix -->
+        <div class="langbar" aria-hidden="true">
+          <i style="--w:46.2%;--i:0;background:#f1e05a"></i><i style="--w:22.4%;--i:1;background:#3572A5"></i>
+          <i style="--w:12.1%;--i:2;background:#f34b7d"></i><i style="--w:8.3%;--i:3;background:#b07219"></i>
+          <i style="--w:4.9%;--i:4;background:#e34c26"></i><i style="--w:3.6%;--i:5;background:#563d7c"></i>
+          <i style="--w:1.8%;--i:6;background:#3178c6"></i><i style="--w:0.7%;--i:7;background:#89e051"></i>
+        </div>
+        <p class="langline">by file size: <b style="color:#f1e05a">javascript 46%</b> · <b style="color:#6f92c4">python 22%</b> · <b style="color:#f34b7d">c++ 12%</b> · <b style="color:#b07219">java 8%</b> · html 5 · css 4 · ts 2 · shell 1. <span class="pen red" style="font-size:1.05em">(the C bar on my friend's repo is a lie, most of it is glue)</span></p>
+        <p class="skills" data-r style="--i:4"><b>fluent:</b> javascript, python, html/css · <b>solid:</b> c++, java · <b>learning:</b> ml (send help) · <b>practicing:</b> whatever the terminal speaks</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ journal ═ -->
+  <section class="page" data-name="journal">
+    <p class="kicker" data-r style="--i:0"><b>~/journal</b> · blogs when i think, logs when i win</p>
+    <h2 class="disp" style="font-size:clamp(1.9rem,5vh,3rem)" data-r style="--i:1">notes & wins</h2>
+    <div class="jgrid" data-r style="--i:2">
+      <aside class="jlist" id="jlist" aria-label="entries"></aside>
+      <article class="jread" id="jread" aria-live="polite"></article>
+    </div>
+  </section>
+
+  <!-- ══ contact ═ -->
+  <section class="page" data-name="contact">
+    <p class="kicker" data-r style="--i:0"><b>~/contact</b> · replies &lt; 24h, faster during conferences</p>
+    <h2 class="disp cdisp" data-r style="--i:1">say hello.</h2>
+    <div data-r style="--i:2">
+      <a class="cmail" id="cmail" href="mailto:hello@aryansingh.dev">hello@aryansingh.dev</a> <!-- EDIT -->
+      <button class="copy" id="copy">[copy]</button>
+    </div>
+    <p class="celse" data-r style="--i:3">elsewhere:
+      <a class="u" href="https://github.com/Aryansjc" target="_blank" rel="noopener">github</a> ·
+      <a class="u" href="#">resume, on ask</a> ·
+      <a class="u" href="mailto:hello@aryansingh.dev">mail</a>
+    </p>
+    <p class="cnote" data-r style="--i:4">Projects, roles, or strong opinions about type systems — all welcome. I reply within a day; faster if you mention terminals.</p>
+  </section>
+</main>
+
+<footer class="status">
+  <span>handmade — one html file · set in bricolage grotesque, newsreader & martian mono · no cookies, no trackers, no build step</span>
+  <span class="r"><span id="pgcount">room 1/5</span><span id="clock">00:00:00</span></span>
+</footer>
+
+<script>
+/* ══════════ YOUR JOURNAL — add posts & daily wins here ══════════ */
+const POSTS = [ // EDIT (newest first). type: 'blog' | 'log'
+  {type:'log',  date:'2026-07-29', title:'shipped the journal page of this portfolio', tags:['web'],
+   body:['The single-viewport site went live today — five rooms, zero scrollbars, one sweep between pages. This journal you are reading is the feature I am proudest of.','Small win, but it turns "I have a portfolio" into "I have a place to think in public."']},
+  {type:'blog', date:'2026-07-27', title:'teaching a neural net to read my handwriting', tags:['ai','python'],
+   body:['Cortex started as a dare: build a neural network with nothing but NumPy. No PyTorch, no safety net. Week one was humbling — my "tiny" net had more bugs than weights.','The turning point was visualising the gradients. Once I could <strong>see</strong> the loss surface instead of printing a number, backprop stopped being a formula and became a direction.','Status: 94% on my own digits, 61% on my friend\'s. Apparently my handwriting is the easiest dataset in ML history. Next: augmentation, and a thicker skin.']},
+  {type:'log',  date:'2026-07-28', title:'orbit: fixed physics stepping — stable 60fps', tags:['webgl'],
+   body:['Decoupled the sim tick from the render loop (fixed timestep, interpolated draws). Bodies no longer tunnel through each other when the frame rate dips.']},
+  {type:'blog', date:'2026-07-18', title:'terminal UIs are the best design practice', tags:['c++','tui'],
+   body:['Constraints are a design education. In a terminal you get 80 columns, 25 rows, and a palette someone else chose in 1978. Every layout decision becomes honest.','Building vsh taught me more about hierarchy, spacing and feedback than any visual tool — because when you can\'t decorate, you have to <strong>structure</strong>.','If you want to get better at interface design, spend a week designing for the worst renderer you own.']},
+  {type:'log',  date:'2026-07-25', title:'vsh: tab completion + history search', tags:['c++'],
+   body:['Added fuzzy history search (Ctrl-R style) and tab completion for paths. The parser finally feels like a product, not a homework.']},
+  {type:'log',  date:'2026-07-22', title:'backprop finally clicked (rubber-duck method)', tags:['ai'],
+   body:['Explained the chain rule out loud to a rubber duck until I found the hand-wave in my own explanation. That hand-wave was exactly the bug in my code. The duck remains unemployed but respected.']},
+  {type:'blog', date:'2026-07-04', title:'why this site has no scroll', tags:['web','meta'],
+   body:['Portfolios keep getting longer; attention keeps getting shorter. I went the other way: one viewport, five rooms, navigation that feels like walking, not skimming.','A page you move through is a place. A page you scroll is a feed. I wanted a place.']},
+];
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const EMAIL = 'hello@aryansingh.dev'; // EDIT
+
+/* ── rooms ─ */
+const pages=$$('.page'), links=$$('.tablink[data-page]'), wipe=$('#wipe');
+let cur=0, busy=false;
+function swap(i){
+  pages[cur].classList.remove('on'); cur=i; pages[cur].classList.add('on');
+  $('#pgcount').textContent=`room ${i+1}/5`;
+  links.forEach(l=>l.classList.toggle('here', +l.dataset.page===i));
+}
+function goTo(i){
+  if(busy||i===cur||i<0||i>=pages.length) return;
+  if(RM){ swap(i); return; }
+  busy=true; wipe.classList.add('run');
+  setTimeout(()=>swap(i), 300);
+  wipe.addEventListener('animationend', ()=>{ wipe.classList.remove('run'); busy=false; }, {once:true});
+}
+links.forEach(l=>l.addEventListener('click',()=>goTo(+l.dataset.page)));
+$$('.path[data-goto]').forEach(b=>b.addEventListener('click',()=>goTo(+b.dataset.goto)));
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight') goTo(cur+1);
+  if(e.key==='ArrowLeft')  goTo(cur-1);
+  if(/^[1-5]$/.test(e.key)) goTo(+e.key-1);
+});
+swap(0);
+
+/* ── journal  */
+const jlist=$('#jlist'), jread=$('#jread');
+const fmt=d=>new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}).toLowerCase();
+POSTS.forEach((p,i)=>{
+  const b=document.createElement('button');
+  b.className='jitem';
+  b.innerHTML=`<span class="jd">${fmt(p.date)}<span class="jbadge">${p.type}</span></span><span class="jt">${p.title}</span>`;
+  b.addEventListener('click',()=>read(i));
+  jlist.appendChild(b);
+});
+function read(i){
+  $$('.jitem').forEach((el,k)=>el.classList.toggle('on',k===i));
+  const p=POSTS[i];
+  jread.innerHTML=`<div class="jr-in">
+    <div class="jr-meta"><span class="${p.type==='blog'?'bb':''}">${p.type==='blog'?'● long read':'● daily win'}</span><span>${fmt(p.date)}</span></div>
+    <h3 class="jr-title">${p.title}</h3>
+    <div class="jr-body">${p.body.map(t=>`<p>${t}</p>`).join('')}</div>
+    <p class="jr-tags">${p.tags.map(t=>`<i>#</i>${t}`).join('  ')}</p>
+  </div>`;
+  jread.classList.remove('swap'); void jread.offsetWidth; jread.classList.add('swap');
+  jread.scrollTop=0;
+}
+read(0);
+
+/* ── copy ── */
+$('#copy').addEventListener('click',()=>{
+  (navigator.clipboard?navigator.clipboard.writeText(EMAIL):Promise.reject()).catch(()=>{}).finally(()=>{
+    const c=$('#copy'); c.textContent='[copied!]'; c.classList.add('ok');
+    setTimeout(()=>{c.textContent='[copy]';c.classList.remove('ok');},1400);
+  });
+});
+
+/* ── clock ─ */
+const clock=$('#clock');
+const tick=()=>{ clock.textContent=new Date().toLocaleTimeString('en-GB',{hour12:false}); };
+tick(); setInterval(tick,1000);
+
+/* ── cursor glow ─ */
+if(!RM && matchMedia('(pointer:fine)').matches){
+  const g=$('#glow'); let mx=innerWidth/2,my=innerHeight/2,x=mx,y=my;
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;});
+  (function loop(){ x+=(mx-x)*.07; y+=(my-y)*.07;
+    g.style.transform=`translate(${x-270}px,${y-270}px)`; requestAnimationFrame(loop); })();
+} else { $('#glow').style.display='none'; }
+</script>
+</body>
+</html>
