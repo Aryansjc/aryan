@@ -4,9 +4,9 @@
 
 ## Journal
 
-- [teaching a neural net to read my handwriting](https://aryansjc.github.io/aryan/blog/2026-07-27-neural-net-handwriting/): Cortex started as a dare — a neural network with nothing but NumPy.
-- [terminal UIs are the best design practice](https://aryansjc.github.io/aryan/blog/2026-07-18-terminal-uis/): Constraints are a design education.
-- [why this site has no scroll](https://aryansjc.github.io/aryan/blog/2026-07-04-why-no-scroll/): A page you move through is a place. A page you scroll is a feed.
+- [today I wired up screenshots](https://aryansjc.github.io/aryan/blog/2026-09-04-example-daily-log/): How daily logs with images work.
+- [shipped the journal page of this portfolio](https://aryansjc.github.io/aryan/blog/2026-07-29-shipped-journal/): The single-viewport site went live.
+- [orbit: fixed physics stepping](https://aryansjc.github.io/aryan/blog/2026-07-28-orbit-physics/): Decoupled the sim tick from the render loop.
 
 ## About
 
