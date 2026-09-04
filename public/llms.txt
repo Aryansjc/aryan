@@ -13,4 +13,4 @@
 Aryan Singh builds clean, intentional systems: web apps, small games, creative tools, and neural nets from scratch.
 
 - GitHub: https://github.com/Aryansjc
-- Email: hello@aryansingh.dev
+- Email:  aryansjc.2006@gmail.com
