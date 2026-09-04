@@ -1,0 +1,14 @@
+---
+title: "what I did today"
+description: "one-line summary (SEO + RSS)"
+pubDate: 2026-09-05
+tags: ["web"]
+type: "log"        # "log" = daily win (● daily win) | "blog" = long read
+draft: false       # true = hidden in production, visible in dev
+---
+
+A few lines about what you built.
+
+![what the screenshot shows](/images/blog/my-progress.png)
+
+One more line if you want. Done.
