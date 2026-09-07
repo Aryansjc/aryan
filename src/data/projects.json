@@ -2,9 +2,35 @@
   "projects": [
     {
       "no": "no.01",
+      "title": "legion-linux-toolkit",
+      "meta": "2026 · python, pyqt6 · linux app",
+      "description": "A full control deck for Lenovo Legion laptops on Linux — power profiles, battery, RGB, fans, overclocking. PyQt6 GUI + tray + CLI with a <strong>native HID driver underneath</strong>.",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/legion-linux-toolkit"
+        }
+      ],
+      "note": "the flagship build"
+    },
+    {
+      "no": "no.02",
+      "title": "control-you-device-with-your-hands",
+      "meta": "2026 · python · computer vision",
+      "description": "Full mouse control from a webcam — cursor, clicks, scroll and drag via hand gestures. MediaPipe + OpenCV with <strong>jitter-free tracking</strong>.",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/control-you-device-with-your-hands"
+        }
+      ],
+      "note": "minority report arc"
+    },
+    {
+      "no": "no.03",
       "title": "chess",
-      "meta": "2025 · javascript · game",
-      "description": "A chess game in the browser — full rules, legal-move highlighting, and an interface that <strong>stays out of the way</strong> of the board.",
+      "meta": "2025 · javascript · game + ai",
+      "description": "Browser chess vs the computer — three difficulties, three board themes, legal-move engine. Minimax under the hood, chess.com leaderboards <strong>on the side</strong>.",
       "links": [
         {
           "text": "code ↗",
@@ -18,57 +44,10 @@
       "note": "checkmate, eventually"
     },
     {
-      "no": "no.02",
-      "title": "burgers",
-      "meta": "2025 · css, javascript · 1★",
-      "description": "A burger joint website — loud, greasy, and proud of it. HTML and CSS with a little spread of <strong>javascript on top</strong>.",
-      "links": [
-        {
-          "text": "code ↗",
-          "href": "https://github.com/Aryansjc/Burgers"
-        },
-        {
-          "text": "demo ↗",
-          "href": "https://aryansjc.github.io/Burgers/"
-        }
-      ],
-      "note": "my most-starred child"
-    },
-    {
-      "no": "no.03",
-      "title": "control-you-device-with-your-hands",
-      "meta": "2026 · python · gesture control",
-      "description": "Control your device with your hands — camera-tracked gestures mapped to system actions. <strong>No touching required.</strong>",
-      "links": [
-        {
-          "text": "code ↗",
-          "href": "https://github.com/Aryansjc/control-you-device-with-your-hands"
-        }
-      ],
-      "note": "minority report arc"
-    },
-    {
       "no": "no.04",
-      "title": "fixer-ysws",
-      "meta": "2025 · css, python",
-      "description": "A fixer tool with a web face — python brains, CSS looks. Built to <strong>repair things fast</strong> and look decent doing it.",
-      "links": [
-        {
-          "text": "code ↗",
-          "href": "https://github.com/Aryansjc/fixer-ysws"
-        },
-        {
-          "text": "demo ↗",
-          "href": "https://aryansjc.github.io/fixer-ysws/"
-        }
-      ],
-      "note": "have you tried turning it off"
-    },
-    {
-      "no": "no.05",
       "title": "forest-journal",
       "meta": "2025 · javascript · journaling",
-      "description": "A quiet little journaling app — write the day down, keep it somewhere green. <strong>Thoughts, but make it forest.</strong>",
+      "description": "A quiet little journaling app — write the day down, keep it somewhere green. Ambient sound, particles and a guided tour, <strong>thoughts, but make it forest</strong>.",
       "links": [
         {
           "text": "code ↗",
@@ -82,9 +61,26 @@
       "note": "touch grass, then log it"
     },
     {
+      "no": "no.05",
+      "title": "burgers",
+      "meta": "2025 · html, css, javascript · 1★",
+      "description": "A burger joint website — loud, greasy, and proud of it. Multi-page HTML and CSS with a little spread of <strong>javascript on top</strong>.",
+      "links": [
+        {
+          "text": "code ↗",
+          "href": "https://github.com/Aryansjc/Burgers"
+        },
+        {
+          "text": "demo ↗",
+          "href": "https://aryansjc.github.io/Burgers/"
+        }
+      ],
+      "note": "my most-starred child"
+    },
+    {
       "no": "no.06",
       "title": "ideas",
-      "meta": "2025 · javascript · scratchpad",
+      "meta": "2025 · javascript, node · scratchpad",
       "description": "A place for half-formed thoughts — every idea gets a page before it <strong>evaporates by morning</strong>.",
       "links": [
         {
