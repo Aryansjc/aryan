@@ -4,7 +4,7 @@ description: "This a minimalist portfolio that I made for myself. This page also
 pubDate: 2026-09-04
 tags: ["web"]
 type: "log"
-draft: true
+draft: false
 ---
 
 This journal you are reading is the feature I am proudest of.
