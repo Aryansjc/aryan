@@ -7,8 +7,7 @@ type: "log"
 draft: false
 ---
 
-Officially forked [armoox/Legion-Linux-Tookit](https://github.com/armoox/Legion-Linux-Tookit) to [Aryansjc/Legion-Linux-Tookit](https://github.com/Aryansjc/Legion-Linux-Tookit) and aligned the git history cleanly on top of
-upstream.
+Officially forked [armoox/Legion-Linux-Tookit](https://github.com/armoox/Legion-Linux-Tookit) to [Aryansjc/Legion-Linux-Tookit](https://github.com/Aryansjc/Legion-Linux-Tookit).
 
 Key updates added to the toolkit:
 - **Native 4-zone ITE HID RGB driver**: Direct `/dev/hidraw` protocol implementation with custom color slots and effect profiles.
